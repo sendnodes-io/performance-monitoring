@@ -71,6 +71,7 @@ if __name__ == '__main__':
     runners_names = [r['service_domain'] for r in big_nodes_runners.get(
         'largestNodeRunners').get('items')]
     runners_names.append("sendnodes.io")
+    runners_names.append("sendnodes.org")
 
     # TODO: Reenable when their server support parallel
     # runners_data = asyncio.run(
