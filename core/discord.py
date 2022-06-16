@@ -14,36 +14,41 @@ class DiscordBot():
             cst.DISCORD_WEBHOOK), username='Perf Bot')
 
     def post_runners_perf_data(self, runners_data: List[RunnerPerformance]):
-        chuncks = [runners_data[x:x+9] for x in range(0, len(runners_data), 9)]
+        # chuncks = [runners_data[x:x+9] for x in range(0, len(runners_data), 9)]
+        description = '\n'.join(
+            [f'{r.runner_domain}:{round(r.avg_last_48_hours)}' for r in runners_data])
+        embed_48 = DiscordEmbed(
+            title=f"Average 48h", description=description, color='03b2f8')
+        self.webhook.add_embed(embed_48)
 
-        for i, c in enumerate(chuncks):
-            embed_48 = DiscordEmbed(
-                title=f"Average 48h ({i}/{len(chuncks)})", description=f'Avg last 48h', color='03b2f8')
-            for r in c:
-                embed_48.add_embed_field(name=r.runner_domain,
-                                         value=round(r.avg_last_48_hours))
-            self.webhook.add_embed(embed_48)
-        for i, c in enumerate(chuncks):
-            embed_24 = DiscordEmbed(
-                title=f"Average 24h ({i}/{len(chuncks)})", description=f'Avg last 24h', color='66ff66')
-            for r in c:
-                embed_24.add_embed_field(name=r.runner_domain,
-                                         value=round(r.avg_last_24_hours))
-            self.webhook.add_embed(embed_24)
-        for i, c in enumerate(chuncks):
-            embed_c = DiscordEmbed(
-                title=f"# chains ({i}/{len(chuncks)})", description=f'Total chains', color='ffff00')
-            for r in c:
-                embed_c.add_embed_field(name=r.runner_domain,
-                                        value=round(r.total_chains))
-            self.webhook.add_embed(embed_c)
-        for i, c in enumerate(chuncks):
-            embed_n = DiscordEmbed(
-                title=f"# nodes ({i}/{len(chuncks)})", description=f'Total nodes', color='ff66ff')
-            for r in c:
-                embed_n.add_embed_field(name=r.runner_domain,
-                                        value=round(r.total_nodes))
-            self.webhook.add_embed(embed_n)
+        # Last 24 hours
+        description = '\n'.join(
+            [f'{r.runner_domain}:{round(r.avg_last_24_hours)}' for r in runners_data])
+        embed_24 = DiscordEmbed(
+            title=f"Average 24h", description=description, color='66ff66')
+        self.webhook.add_embed(embed_24)
 
-        response = self.webhook.execute()
-        logging.info(response)
+        # Last 6 hours
+        description = '\n'.join(
+            [f'{r.runner_domain}:{round(r.avg_last_6_hours)}' for r in runners_data])
+        embed_6 = DiscordEmbed(
+            title=f"Average 6h", description=description, color='7d7d73')
+        self.webhook.add_embed(embed_6)
+
+        # Chains count
+        description = '\n'.join(
+            [f'{r.runner_domain}:{r.total_chains}' for r in runners_data])
+        embed_c = DiscordEmbed(
+            title=f"# chains", description=description, color='ffff00')
+        self.webhook.add_embed(embed_c)
+
+        # Nodes count
+        description = '\n'.join(
+            [f'{r.runner_domain}:{r.total_nodes}' for r in runners_data])
+        embed_n = DiscordEmbed(
+            title=f"# nodes", description=description, color='ff66ff')
+
+        self.webhook.add_embed(embed_n)
+        self.webhook.execute()
+
+        # logging.info(response)
