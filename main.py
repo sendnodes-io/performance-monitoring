@@ -105,4 +105,4 @@ if __name__ == '__main__':
             )
             nodes_runners.append(rp)
 
-        discord_client.post_runners_perf_data(nodes_runners)
+    discord_client.post_runners_perf_data(nodes_runners)
