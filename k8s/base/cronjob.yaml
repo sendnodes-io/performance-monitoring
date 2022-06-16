@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: performance-monitoring
+spec:
+  schedule: "0 */4 * * *"
+  successfulJobsHistoryLimit: 10
+  concurrencyPolicy: Replace
+  suspend: true
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          securityContext:
+            runAsUser: 1000
+          containers:
+            - name: performance-monitoring
+              image: sendnodes/performance-monitoring
+              envFrom:
+                - secretRef:
+                    name: performance-monitoring-secrets
+          restartPolicy: Never

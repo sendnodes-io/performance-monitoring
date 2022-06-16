@@ -1,0 +1,15 @@
+namePrefix: sendnodes-
+namespace: sendnodes-staging
+
+resources:
+  - ./namespace.yaml
+  - ../../base
+
+patches:
+  - target:
+      kind: CronJob
+      name: performance-monitoring
+    patch: |-
+      - op: replace
+        path: /spec/suspend
+        value: false

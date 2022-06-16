@@ -1,0 +1,8 @@
+resources:
+  - cronjob.yaml
+
+secretGenerator:
+  - name: performance-monitoring-secrets
+    envs:
+      - secrets.txt
+    type: Opaque
