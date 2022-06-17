@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: performance-monitoring
 spec:
-  schedule: "0 */4 * * *"
+  schedule: "0 * * * *"
   successfulJobsHistoryLimit: 10
   concurrencyPolicy: Replace
   suspend: true
