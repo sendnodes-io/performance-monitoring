@@ -14,3 +14,12 @@ class RunnerPerformance(BaseModel):
     total_chains: Optional[int]
     total_nodes: Optional[int]
     total_balance: Optional[float]
+
+
+class NetworkPerformance(BaseModel):
+    max_pokt: Optional[float]
+    max_relays: Optional[int]
+    thirty_day_pokt_avg: Optional[float]
+    thirty_day_relays_avg: Optional[int]
+    today_pokt: Optional[float]
+    today_relays: Optional[int]

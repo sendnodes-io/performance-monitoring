@@ -1,5 +1,6 @@
 
 import asyncio
+from importlib.util import resolve_name
 import logging
 from random import randint
 from sys import dont_write_bytecode
@@ -9,8 +10,8 @@ from unittest import result, runner
 from core.discord import DiscordBot
 from core.gql_client import GqlClient
 from core.aws_utils import AwsClient
-from core.model import RunnerPerformance
-from gql_requests import get_largest_nodes_runners_query, get_nodes_runners_perf
+from core.model import NetworkPerformance, RunnerPerformance
+from gql_requests import get_largest_nodes_runners_query, get_nodes_runners_perf, get_network_perf_query
 
 # Initialise logger
 logging.basicConfig(level=logging.INFO,
@@ -45,9 +46,6 @@ if __name__ == '__main__':
     logging.info(f'Initializing Gql client')
     gql_client = GqlClient()
 
-    logging.info(f'Initializing Aws client')
-    aws_client = AwsClient()
-
     logging.info(f'Initializing Discord client')
     discord_client = DiscordBot()
 
@@ -62,16 +60,8 @@ if __name__ == '__main__':
         raise Exception(
             f'Could not retrieve big nodes runners exiting - will improve soon')
 
-    logging.info('Persisting nodes runners information to AWS')
-
-    aws_client.save_to_s3(
-        bucket_file=f'pokt-stats/{get_largest_nodes_runners_query.GET_LARGEST_NODES_RUNNERS_QUERY_ID}.json', data=big_nodes_runners)
-    logging.debug('Successfully saved big nodes runners into S3')
-
     runners_names = [r['service_domain'] for r in big_nodes_runners.get(
         'largestNodeRunners').get('items')]
-    runners_names.append("sendnodes.io")
-    runners_names.append("sendnodes.org")
 
     # TODO: Reenable when their server support parallel
     # runners_data = asyncio.run(
@@ -86,10 +76,6 @@ if __name__ == '__main__':
     for i, r in enumerate(runners_data):
         response = r.get('getNodeRunnerSummary')
         if response:
-            aws_client.save_to_s3(
-                bucket_file=f'pokt-stats/{get_nodes_runners_perf.GET_NODES_RUNNER_PERF_QUERY_ID}-[{runners_names[i]}].json', data=response)
-            logging.debug(f'Successfully saved runners data')
-
             rp = RunnerPerformance(
                 runner_domain=runners_names[i],
                 total_last_48_hours=response.get('total_last_48_hours'),
@@ -105,4 +91,21 @@ if __name__ == '__main__':
             )
             nodes_runners.append(rp)
 
+    network_performance = asyncio.run(gql_client.send_query(
+        get_network_perf_query.GET_NETWORK_PERFORMANCE_QUERY,
+        get_network_perf_query.GET_NETWORK_PERFORMANCE_QUERY_ID
+    ))
+    if not network_performance:
+        logging.error(f'Could not fetch data for network perf.')
+    else:
+        response = network_performance.get('getPoktEarnPerformance')
+        if response:
+            net_perf = NetworkPerformance(
+                max_pokt=response.get('max_pokt'),
+                today_pokt=response.get('today_pokt'),
+                thirty_day_pokt_avg=response.get('thirty_day_pokt_avg'),
+            )
+            discord_client.post_network_perf_data(net_perf)
+
+    logging.info(f'====== Posting data to Discord ======')
     discord_client.post_runners_perf_data(nodes_runners)
