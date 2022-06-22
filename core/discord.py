@@ -1,9 +1,9 @@
-import logging
 from typing import List
+from unittest import runner
 from core import utils
 from core import constants as cst
 from discord_webhook import DiscordEmbed, DiscordWebhook
-from core.model import RunnerPerformance
+from core.model import NetworkPerformance, RunnerPerformance
 
 
 class DiscordBot():
@@ -13,8 +13,18 @@ class DiscordBot():
         self.webhook = DiscordWebhook(url=env_var.get(
             cst.DISCORD_WEBHOOK), username='Perf Bot')
 
+    def post_network_perf_data(self, network_data: NetworkPerformance):
+        description = f'Today Pokt: {network_data.today_pokt}\n30d avg Pokt: {network_data.thirty_day_pokt_avg}'
+        embed_net_perf = DiscordEmbed(
+            title=f'Network Perf', description=description, color='ffb0e3')
+        self.webhook.remove_embeds()
+        self.webhook.add_embed(embed_net_perf)
+        self.webhook.execute()
+
     def post_runners_perf_data(self, runners_data: List[RunnerPerformance]):
         # chuncks = [runners_data[x:x+9] for x in range(0, len(runners_data), 9)]
+        self.webhook.remove_embeds()
+        runners_data.sort(key=lambda r: r.avg_last_48_hours, reverse=True)
         description = '\n'.join(
             [f'{r.runner_domain}:{round(r.avg_last_48_hours)}' for r in runners_data])
         embed_48 = DiscordEmbed(
@@ -22,6 +32,7 @@ class DiscordBot():
         self.webhook.add_embed(embed_48)
 
         # Last 24 hours
+        runners_data.sort(key=lambda r: r.avg_last_24_hours, reverse=True)
         description = '\n'.join(
             [f'{r.runner_domain}:{round(r.avg_last_24_hours)}' for r in runners_data])
         embed_24 = DiscordEmbed(
@@ -29,6 +40,7 @@ class DiscordBot():
         self.webhook.add_embed(embed_24)
 
         # Last 6 hours
+        runners_data.sort(key=lambda r: r.avg_last_6_hours, reverse=True)
         description = '\n'.join(
             [f'{r.runner_domain}:{round(r.avg_last_6_hours)}' for r in runners_data])
         embed_6 = DiscordEmbed(
@@ -36,6 +48,7 @@ class DiscordBot():
         self.webhook.add_embed(embed_6)
 
         # Chains count
+        runners_data.sort(key=lambda r: r.total_chains, reverse=True)
         description = '\n'.join(
             [f'{r.runner_domain}:{r.total_chains}' for r in runners_data])
         embed_c = DiscordEmbed(
@@ -43,6 +56,7 @@ class DiscordBot():
         self.webhook.add_embed(embed_c)
 
         # Nodes count
+        runners_data.sort(key=lambda r: r.total_nodes, reverse=True)
         description = '\n'.join(
             [f'{r.runner_domain}:{r.total_nodes}' for r in runners_data])
         embed_n = DiscordEmbed(
