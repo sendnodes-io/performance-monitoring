@@ -1,12 +1,16 @@
 
 import asyncio
+from datetime import datetime
 from importlib.util import resolve_name
 import logging
+import optparse
 from random import randint
 from sys import dont_write_bytecode
 import time
 from typing import List
 from unittest import result, runner
+
+from traitlets import default
 from core.discord import DiscordBot
 from core.gql_client import GqlClient
 from core.aws_utils import AwsClient
@@ -40,11 +44,15 @@ async def download_runners_data_sequential(gql_client, runners_domains):
         results.append(data)
     return results
 
-if __name__ == '__main__':
+
+def get_stats():
     logging.info(f'STARTING - pokt-explorer client')
 
     logging.info(f'Initializing Gql client')
     gql_client = GqlClient()
+
+    logging.info(f'Initializing Aws client')
+    aws_client = AwsClient()
 
     logging.info(f'Initializing Discord client')
     discord_client = DiscordBot()
@@ -72,10 +80,14 @@ if __name__ == '__main__':
     if not runners_data:
         raise Exception(f'Could not fetch nodes runners data')
 
+    ts = datetime.now().strftime('%Y%m%d-%H%M%S')
     nodes_runners: List[RunnerPerformance] = []
     for i, r in enumerate(runners_data):
         response = r.get('getNodeRunnerSummary')
         if response:
+            aws_client.save_to_s3(
+                bucket_file=f'pokt-stats/{get_nodes_runners_perf.GET_NODES_RUNNER_PERF_QUERY_ID}-[{runners_names[i]}]-{ts}.json', data=response)
+            logging.debug(f'Successfully saved runners data')
             rp = RunnerPerformance(
                 runner_domain=runners_names[i],
                 total_last_48_hours=response.get('total_last_48_hours'),
@@ -109,3 +121,28 @@ if __name__ == '__main__':
 
     logging.info(f'====== Posting data to Discord ======')
     discord_client.post_runners_perf_data(nodes_runners)
+
+
+def Main():
+    parser = optparse.OptionParser()
+
+    parser.add_option('-g', '--getstats', dest='getstats',
+                      default=False, action='store_true')
+
+    parser.add_option('-t', '--tweet', dest='tweet',
+                      default=False, action='store_true')
+
+    (options, args) = parser.parse_args()
+    if(options.getstats):
+        print('Getting statistics from API')
+        get_stats()
+        exit(0)
+    if(options.tweet):
+        print('Tweeting performance')
+        exit(0)
+    else:
+        print(parser.usage)
+
+
+if __name__ == '__main__':
+    Main()
