@@ -1,20 +1,16 @@
 
 import asyncio
 from datetime import datetime
-from importlib.util import resolve_name
 import logging
 import optparse
 from random import randint
-from sys import dont_write_bytecode
 import time
 from typing import List
-from unittest import result, runner
-
-from traitlets import default
 from core.discord import DiscordBot
 from core.gql_client import GqlClient
 from core.aws_utils import AwsClient
 from core.model import NetworkPerformance, RunnerPerformance
+from core.tweet_utils import TwitterBot
 from gql_requests import get_largest_nodes_runners_query, get_nodes_runners_perf, get_network_perf_query
 
 # Initialise logger
@@ -53,9 +49,6 @@ def get_stats():
 
     logging.info(f'Initializing Aws client')
     aws_client = AwsClient()
-
-    logging.info(f'Initializing Discord client')
-    discord_client = DiscordBot()
 
     logging.info('====== Data collection phase ======')
     logging.info('Getting biggest runners data')
@@ -117,31 +110,47 @@ def get_stats():
                 today_pokt=response.get('today_pokt'),
                 thirty_day_pokt_avg=response.get('thirty_day_pokt_avg'),
             )
-            discord_client.post_network_perf_data(net_perf)
+    return net_perf, nodes_runners
+
+
+def post_discord_message(network_performance: NetworkPerformance,
+                         nodes_runners_perf: List[RunnerPerformance]):
+    logging.info(f'Initializing Discord client')
+    discord_client = DiscordBot()
 
     logging.info(f'====== Posting data to Discord ======')
-    discord_client.post_runners_perf_data(nodes_runners)
+    if(network_performance):
+        discord_client.post_network_perf_data(network_performance)
+    if(nodes_runners_perf):
+        discord_client.post_runners_perf_data(nodes_runners_perf)
+
+
+def post_twitter_message(nodes_runner_perf: List[RunnerPerformance]):
+    logging.info(f'Initializing Twitter Bot')
+    tweepy_client = TwitterBot()
+    if nodes_runner_perf:
+        tweepy_client.post_nodes_runners_perf(nodes_runner_perf)
 
 
 def Main():
     parser = optparse.OptionParser()
 
-    parser.add_option('-g', '--getstats', dest='getstats',
+    parser.add_option('-d', '--discord', dest='discord',
                       default=False, action='store_true')
 
     parser.add_option('-t', '--tweet', dest='tweet',
                       default=False, action='store_true')
 
     (options, args) = parser.parse_args()
-    if(options.getstats):
-        print('Getting statistics from API')
-        get_stats()
-        exit(0)
+
+    netperf, runners_perf = get_stats()
+    if(options.discord):
+        post_discord_message(netperf, runners_perf)
     if(options.tweet):
-        print('Tweeting performance')
-        exit(0)
+        post_twitter_message(runners_perf)
     else:
         print(parser.usage)
+    exit(0)
 
 
 if __name__ == '__main__':
