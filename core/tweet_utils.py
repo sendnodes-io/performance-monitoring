@@ -50,12 +50,14 @@ class TwitterBot():
             [f'{highlight_sendnodes(r.runner_domain)}:{round(r.avg_last_48_hours)}' for r in runners_data])
 
         # If tweet is longer than 280 we need to shorten it
-        if len(tweet) > 180:
-            logging.info(f'Current length is over 280 shortening tweet')
+        TWEET_LIMIT = 180
+        if len(tweet) > TWEET_LIMIT:
+            logging.info(
+                f'Current length is over {TWEET_LIMIT} shortening tweet')
             rows = tweet.split('\n')
             total_length = 0
             row_index = 0
-            while total_length + len(rows[row_index]) < 180:
+            while total_length + len(rows[row_index]) < TWEET_LIMIT:
                 total_length += len(rows[row_index])
                 row_index += 1
             tweet = '\n'.join(rows[:row_index])
