@@ -34,22 +34,28 @@ class TwitterBot():
             logging.fatal(f'Could not initialize twitter client: {ex}')
             raise
 
-    def test_tweet(self):
+    def test_tweet(self, perf_avg=24):
         try:
             self.api.update_status(
                 "This is a test tweet\nto the moon \U0001F680")
         except Exception as ex:
             logging.error(f'An error occurred when sending test tweet: {ex}')
 
-    def post_nodes_runners_perf(self, runners_data: List[RunnerPerformance]):
-        runners_data.sort(key=lambda r: r.avg_last_24_hours, reverse=True)
+    def post_nodes_runners_perf(self, runners_data: List[RunnerPerformance], perf_avg=24):
 
-        def highlight_sendnodes(x): return str(
-            x) + " \U0001F680" if "sendnodes.org" in x.lower() else str(x)
-        tweet = '\n'.join(
-            [f'{highlight_sendnodes(r.runner_domain)}:{round(r.avg_last_48_hours)}' for r in runners_data])
-
-        # If tweet is longer than 280 we need to shorten it
+        def highlight_sendnodes(x, y): return str(
+            x) + ":" + str(y) + " \U0001F680" if "sendnodes.org" in x.lower() else str(x) + ":" + str(y)
+        if perf_avg == 24:
+            runners_data.sort(key=lambda r: r.avg_last_24_hours, reverse=True)
+            tweet = 'Top nodes runners 24h\n' + '\n'.join(
+                [f'{highlight_sendnodes(r.runner_domain, round(r.avg_last_24_hours))}' for r in runners_data])
+        elif perf_avg == 48:
+            runners_data.sort(key=lambda r: r.avg_last_48_hours, reverse=True)
+            tweet = 'Top nodes runners 48h \n' + '\n'.join(
+                [f'{highlight_sendnodes(r.runner_domain, round(r.avg_last_48_hours))}' for r in runners_data])
+        else:
+            raise Exception('Can not resolve perf average')
+        # If tweet is longer than 180 we need to shorten it
         TWEET_LIMIT = 180
         if len(tweet) > TWEET_LIMIT:
             logging.info(

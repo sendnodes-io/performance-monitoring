@@ -6,6 +6,7 @@ import optparse
 from random import randint
 import time
 from typing import List
+from unittest import runner
 from core.discord import DiscordBot
 from core.gql_client import GqlClient
 from core.aws_utils import AwsClient
@@ -129,7 +130,8 @@ def post_twitter_message(nodes_runner_perf: List[RunnerPerformance]):
     logging.info(f'Initializing Twitter Bot')
     tweepy_client = TwitterBot()
     if nodes_runner_perf:
-        tweepy_client.post_nodes_runners_perf(nodes_runner_perf)
+        tweepy_client.post_nodes_runners_perf(nodes_runner_perf, 24)
+        tweepy_client.post_nodes_runners_perf(nodes_runner_perf, 48)
 
 
 def Main():
