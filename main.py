@@ -128,6 +128,7 @@ def post_twitter_message(nodes_runner_perf: List[RunnerPerformance]):
     logging.info(f'Initializing Twitter Bot')
     tweepy_client = TwitterBot()
     if nodes_runner_perf:
+        logging.info(f'====== Posting data to Twitter ======')
         tweepy_client.post_nodes_runners_perf(nodes_runner_perf, 24)
         tweepy_client.post_nodes_runners_perf(nodes_runner_perf, 48)
 
