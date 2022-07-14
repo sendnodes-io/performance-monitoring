@@ -151,6 +151,7 @@ def Main():
         post_twitter_message(runners_perf)
     else:
         print(parser.usage)
+    logging.info('Program complete exiting')
     exit(0)
 
 
