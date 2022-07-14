@@ -42,15 +42,6 @@ class AwsClient():
 
         """
         try:
-            # logging.info(
-            #     f'Checking if bucket {self.s3_bucket} exist')
-            # buckets_list = self.s3_client.list_buckets()
-            # if not self.s3_bucket:
-            #     raise ValueError(f'No bucket name specified')
-            # if self.s3_bucket not in buckets_list['Buckets']:
-            #     raise Exception(
-            #         f'The specified bucket does not exist. Create {self.s3_bucket}')
-
             logging.info(
                 f'Saving object into S3 bucket into folder {bucket_file}')
             self.s3_client.put_object(

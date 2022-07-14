@@ -6,10 +6,8 @@ import optparse
 from random import randint
 import time
 from typing import List
-from unittest import runner
 from core.discord import DiscordBot
 from core.gql_client import GqlClient
-from core.aws_utils import AwsClient
 from core.model import NetworkPerformance, RunnerPerformance
 from core.tweet_utils import TwitterBot
 from gql_requests import get_largest_nodes_runners_query, get_nodes_runners_perf, get_network_perf_query
@@ -48,8 +46,8 @@ def get_stats():
     logging.info(f'Initializing Gql client')
     gql_client = GqlClient()
 
-    logging.info(f'Initializing Aws client')
-    aws_client = AwsClient()
+    # logging.info(f'Initializing Aws client')
+    # aws_client = AwsClient()
 
     logging.info('====== Data collection phase ======')
     logging.info('Getting biggest runners data')
@@ -79,9 +77,9 @@ def get_stats():
     for i, r in enumerate(runners_data):
         response = r.get('getNodeRunnerSummary')
         if response:
-            aws_client.save_to_s3(
-                bucket_file=f'pokt-stats/{get_nodes_runners_perf.GET_NODES_RUNNER_PERF_QUERY_ID}-[{runners_names[i]}]-{ts}.json', data=response)
-            logging.debug(f'Successfully saved runners data')
+            # aws_client.save_to_s3(
+            #    bucket_file=f'pokt-stats/{get_nodes_runners_perf.GET_NODES_RUNNER_PERF_QUERY_ID}-[{runners_names[i]}]-{ts}.json', data=response)
+            #logging.debug(f'Successfully saved runners data')
             rp = RunnerPerformance(
                 runner_domain=runners_names[i],
                 total_last_48_hours=response.get('total_last_48_hours'),
