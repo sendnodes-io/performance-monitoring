@@ -1,4 +1,7 @@
+import enum
 from typing import List
+
+from pexpect import ExceptionPexpect
 from core import utils
 import logging
 import tweepy
@@ -63,14 +66,37 @@ class TwitterBot():
             rows = tweet.split('\n')
             total_length = 0
             row_index = 0
-            while total_length + len(rows[row_index]) < TWEET_LIMIT:
-                total_length += len(rows[row_index])
-                row_index += 1
-            tweet = '\n'.join(rows[:row_index])
+            thread = []
+            start_idx = 0
+            while row_index < len(rows) - 1:
+                while total_length + len(rows[row_index]) < TWEET_LIMIT:
+                    total_length += len(rows[row_index])
+                    if row_index == len(rows)-1:
+                        break
+                    else:
+                        row_index += 1
 
-        try:
-            self.api.update_status(tweet)
-        except Exception as ex:
-            logging.error(
-                f'An error occurred when sending performance tweet: {ex}')
-            raise
+                s_tweet = '\n'.join(rows[start_idx:row_index])
+                thread.append(s_tweet)
+                total_length = 0
+                start_idx = row_index
+
+            try:
+                for i, t in enumerate(thread):
+                    if i == 0:
+                        current_tweet = self.api.update_status(
+                            t, auto_populate_reply_metadata=True)
+                    else:
+                        current_tweet = self.api.update_status(
+                            t, in_reply_to_status_id=current_tweet.id, auto_populate_reply_metadata=True)
+            except Exception as ex:
+                logging.error(
+                    f'An error occurred when sending performance tweet: {ex}')
+                raise
+        else:
+            try:
+                self.api.update_status(t, auto_populate_reply_metadata=True)
+            except Exception as ex:
+                logging.error(
+                    f'An error occurred when sending performance tweet: {ex}')
+                raise
