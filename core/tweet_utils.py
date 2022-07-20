@@ -76,7 +76,11 @@ class TwitterBot():
                     else:
                         row_index += 1
 
-                s_tweet = '\n'.join(rows[start_idx:row_index])
+                if start_idx > 0:
+                    s_tweet = '\U0001F447\n' + \
+                        '\n'.join(rows[start_idx:row_index])
+                else:
+                    s_tweet = '\n'.join(rows[start_idx:row_index])
                 thread.append(s_tweet)
                 total_length = 0
                 start_idx = row_index
