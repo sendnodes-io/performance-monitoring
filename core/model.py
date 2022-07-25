@@ -1,9 +1,11 @@
+from optparse import Option
 from typing import Optional
 from pydantic import BaseModel
 
 
 class RunnerPerformance(BaseModel):
     runner_domain: str
+    runner_domain_sort: Optional[int]
     total_last_48_hours: Optional[float]
     total_last_24_hours: Optional[float]
     total_last_6_hours: Optional[float]
