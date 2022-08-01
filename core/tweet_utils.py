@@ -88,7 +88,8 @@ class TwitterBot():
                 thread.append(s_tweet)
                 total_length = 0
                 start_idx = row_index
-
+            thread.append(
+                f'Disclaimer - this information is pulled from POKTscan & mixes validators and servicers average rewards')
             try:
                 for i, t in enumerate(thread):
                     if i == 0:
