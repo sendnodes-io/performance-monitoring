@@ -53,12 +53,12 @@ class TwitterBot():
         if perf_avg == 24:
             runners_data.sort(key=lambda r: (
                 r.avg_last_24_hours, r.runner_domain_sort), reverse=True)
-            tweet = 'Top nodes runners 24h\n' + '\n'.join(
+            tweet = 'Top $POKT node runners 24h\n' + '\n'.join(
                 [f'{highlight_sendnodes(r.runner_domain, round(r.avg_last_24_hours))}' for r in runners_data])
         elif perf_avg == 48:
             runners_data.sort(key=lambda r: (
                 r.avg_last_48_hours, r.runner_domain_sort), reverse=True)
-            tweet = 'Top nodes runners 48h \n' + '\n'.join(
+            tweet = 'Top $POKT node runners 48h \n' + '\n'.join(
                 [f'{highlight_sendnodes(r.runner_domain, round(r.avg_last_48_hours))}' for r in runners_data])
         else:
             raise Exception('Can not resolve perf average')
