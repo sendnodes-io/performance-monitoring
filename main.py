@@ -104,11 +104,13 @@ def get_stats():
     else:
         response = network_performance.get('getPoktEarnPerformance')
         if response:
-            net_perf = NetworkPerformance(
-                max_pokt=response.get('thirty_days_max_pokt_avg') / 1e6,
-                today_pokt=response.get('twenty_fours_hs_less_pokt_avg') / 1e6,
-                thirty_day_pokt_avg=response.get('thirty_days_max_pokt_avg') / 1e6,
-            )
+            servicer = response.get('servicer')
+            if servicer:
+                net_perf = NetworkPerformance(
+                    max_pokt=servicer.get('thirty_days_max_pokt_avg') / 1e6,
+                    today_pokt=servicer.get('twenty_fours_hs_less_pokt_avg') / 1e6,
+                    thirty_day_pokt_avg=servicer.get('thirty_days_max_pokt_avg') / 1e6,
+                )
     return net_perf, nodes_runners
 
 
