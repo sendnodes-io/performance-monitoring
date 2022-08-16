@@ -6,7 +6,7 @@ GET_LARGEST_NODES_RUNNERS_QUERY = """query{
       validators
       power
     }
-    total_power
+    total_tokens
   }
 }
 """
