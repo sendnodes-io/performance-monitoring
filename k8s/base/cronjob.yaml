@@ -3,9 +3,9 @@ kind: CronJob
 metadata:
   name: performance-monitoring
 spec:
-  schedule: "0 0-11,13-23 * * *"
+  schedule: "0 * * * *"
   successfulJobsHistoryLimit: 10
-  concurrencyPolicy: Replace
+  concurrencyPolicy: Forbid
   suspend: true
   jobTemplate:
     spec:
@@ -19,34 +19,6 @@ spec:
               command:
                 - python
                 - ./main.py
-                - -d
-              envFrom:
-                - secretRef:
-                    name: performance-monitoring-secrets
-          restartPolicy: Never
----
-apiVersion: batch/v1
-kind: CronJob
-metadata:
-  name: performance-monitoring-tweet
-spec:
-  schedule: "0 12 * * *"
-  successfulJobsHistoryLimit: 10
-  concurrencyPolicy: Replace
-  suspend: true
-  jobTemplate:
-    spec:
-      template:
-        spec:
-          securityContext:
-            runAsUser: 1000
-          containers:
-            - name: performance-monitoring
-              image: sendnodes/performance-monitoring
-              command:
-                - python
-                - ./main.py
-                - -t
                 - -d
               envFrom:
                 - secretRef:
