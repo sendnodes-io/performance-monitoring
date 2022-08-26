@@ -1,3 +1,4 @@
+from gql.transport.websockets import log as websockets_logger
 import logging
 from random import randint
 import time
@@ -5,10 +6,13 @@ from typing import Dict
 from core import utils
 from core import constants as cst
 from gql import Client, gql
-from gql.transport.aiohttp import AIOHTTPTransport
+from gql.transport.aiohttp import AIOHTTPTransport, log as aiohttp_logger
 from gql.transport.requests import log as requests_logger
 
-requests_logger.setLevel(logging.ERROR)
+# quiet dwn u
+aiohttp_logger.setLevel(logging.WARNING)
+requests_logger.setLevel(logging.WARNING)
+websockets_logger.setLevel(logging.WARNING)
 
 
 class GqlClient():
@@ -28,25 +32,23 @@ class GqlClient():
         """
 
         """
-        logging.info(f'Sending query {query_id}')
+        logging.debug(f'Sending query {query_id}')
         attempt = 0
         while attempt < cst.MAX_RETRIES:
             try:
-                logging.info(f'Attemp {attempt} for query {query_id}')
                 async with Client(
                     transport=self.transport,
                     fetch_schema_from_transport=True,
-                    execute_timeout=20
+                    execute_timeout=60
                 ) as session:
-                    query = gql(query)
-                    result = await session.execute(query, variable_values=params)
+                    result = await session.execute(gql(query), variable_values=params)
                     logging.info(f'Successfully sent query {query_id}')
                     return result
             except Exception as ex:
-                logging.warn(
-                    f'An exception occured when sending query: {query_id}\nex:{ex}')
-                time.sleep(randint(5, 20))
                 attempt += 1
+                logging.warn(
+                    f'Attempted {attempt} for query {query_id}, but an exception occured when sending query: {query_id}\n\tex:{ex}')
+                time.sleep(randint(15, 30))
                 continue
         logging.error(f'Could not fetch data for query: {query_id}')
         return {}

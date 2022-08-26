@@ -4,3 +4,4 @@
 /data/*
 /.vscode/launch.json
 secrets.txt
+.env

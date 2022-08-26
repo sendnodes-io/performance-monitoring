@@ -11,6 +11,9 @@ from core.gql_client import GqlClient
 from core.model import NetworkPerformance, RunnerPerformance
 from core.tweet_utils import TwitterBot
 from gql_requests import get_largest_nodes_runners_query, get_nodes_runners_perf, get_network_perf_query
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Initialise logger
 logging.basicConfig(level=logging.INFO,
@@ -35,7 +38,6 @@ async def download_runners_data_sequential(gql_client, runners_domains):
     for r in runners_domains:
         data = await gql_client.send_query(get_nodes_runners_perf.GET_NODES_RUNNER_PERF_QUERY,
                                            get_nodes_runners_perf.GET_NODES_RUNNER_PERF_QUERY_ID + f"[{r}]", {"domain": r})
-        time.sleep(randint(10, 20))
         results.append(data)
     return results
 
@@ -60,8 +62,13 @@ def get_stats():
         raise Exception(
             f'Could not retrieve big nodes runners exiting - will improve soon')
 
+    # sort by power of domain
+    big_nodes_runners.get(
+        'largestNodeRunners').get('items').sort(key=lambda x: x['power'], reverse=True)
+
+    # only look at top 25 most powerful domains
     runners_names = [r['service_domain'] for r in big_nodes_runners.get(
-        'largestNodeRunners').get('items')]
+        'largestNodeRunners').get('items')][:25]
 
     # TODO: Reenable when their server support parallel
     # runners_data = asyncio.run(
@@ -108,8 +115,10 @@ def get_stats():
             if servicer:
                 net_perf = NetworkPerformance(
                     max_pokt=servicer.get('thirty_days_max_pokt_avg') / 1e6,
-                    today_pokt=servicer.get('twenty_fours_hs_less_pokt_avg') / 1e6,
-                    thirty_day_pokt_avg=servicer.get('thirty_days_max_pokt_avg') / 1e6,
+                    today_pokt=servicer.get(
+                        'twenty_fours_hs_less_pokt_avg') / 1e6,
+                    thirty_day_pokt_avg=servicer.get(
+                        'thirty_days_max_pokt_avg') / 1e6,
                 )
     return net_perf, nodes_runners
 
