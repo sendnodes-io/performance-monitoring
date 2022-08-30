@@ -12,6 +12,7 @@ from core.model import NetworkPerformance, RunnerPerformance
 from core.tweet_utils import TwitterBot
 from gql_requests import get_largest_nodes_runners_query, get_nodes_runners_perf, get_network_perf_query
 from dotenv import load_dotenv
+import csv
 
 load_dotenv()
 
@@ -42,7 +43,7 @@ async def download_runners_data_sequential(gql_client, runners_domains):
     return results
 
 
-def get_stats():
+def get_stats(num_node_runners=25):
     logging.info(f'STARTING - pokt-explorer client')
 
     logging.info(f'Initializing Gql client')
@@ -68,7 +69,7 @@ def get_stats():
 
     # only look at top 25 domains by tokens
     node_runners = dict((r['service_domain'], r['tokens']) for r in big_nodes_runners.get(
-        'largestNodeRunners').get('items')[:25])
+        'largestNodeRunners').get('items')[:num_node_runners])
 
     # TODO: Reenable when their server support parallel
     # runners_data = asyncio.run(
@@ -92,19 +93,19 @@ def get_stats():
             #logging.debug(f'Successfully saved runners data')
             rp = RunnerPerformance(
                 runner_domain=service_domain,
-                total_last_48_hours=response.get('total_last_48_hours'),
-                total_last_24_hours=response.get('total_last_24_hours'),
-                total_last_6_hours=response.get('total_last_6_hours'),
+                # total_last_48_hours=response.get('total_last_48_hours'),
+                # total_last_24_hours=response.get('total_last_24_hours'),
+                # total_last_6_hours=response.get('total_last_6_hours'),
                 avg_last_48_hours=response.get(
                     'serviced_last_48_hours') / tokens_by_15k,
                 avg_last_24_hours=response.get(
                     'serviced_last_24_hours') / tokens_by_15k,
                 avg_last_6_hours=response.get(
                     'serviced_last_6_hours') / tokens_by_15k,
-                jailed_now=response.get('jailed_now'),
+                # jailed_now=response.get('jailed_now'),
                 total_chains=response.get('total_chains'),
                 total_nodes=response.get('total_nodes'),
-                total_balance=response.get('total_balance'),
+                tokens=node_runners[service_domain] / 1e6
             )
             nodes_runners.append(rp)
 
@@ -153,6 +154,9 @@ def post_twitter_message(nodes_runner_perf: List[RunnerPerformance]):
 def Main():
     parser = optparse.OptionParser()
 
+    parser.add_option('-n', '--num-node-runners', dest='num_node_runners',
+                      default=3, type='int', help='Number of node runners to get stats for')
+
     parser.add_option('-d', '--discord', dest='discord',
                       default=False, action='store_true')
 
@@ -161,7 +165,17 @@ def Main():
 
     (options, args) = parser.parse_args()
 
-    netperf, runners_perf = get_stats()
+    netperf, runners_perf = get_stats(options.num_node_runners)
+
+    # generate csv file
+    keys = list(
+        {k: v for k, v in runners_perf[0].dict().items() if v is not None}.keys())
+    with open('node_runners.csv', 'w', newline='') as output_file:
+        dict_writer = csv.DictWriter(output_file, keys)
+        dict_writer.writeheader()
+        dict_writer.writerows([{k: v for k, v in rp.dict(
+        ).items() if v is not None} for rp in runners_perf])
+
     if(options.discord):
         post_discord_message(netperf, runners_perf)
     if(options.tweet):

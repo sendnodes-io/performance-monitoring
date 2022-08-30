@@ -16,6 +16,7 @@ class RunnerPerformance(BaseModel):
     total_chains: Optional[int]
     total_nodes: Optional[int]
     total_balance: Optional[float]
+    tokens: Optional[float]
 
 
 class NetworkPerformance(BaseModel):

@@ -4,6 +4,7 @@ from core import utils
 from core import constants as cst
 from discord_webhook import DiscordEmbed, DiscordWebhook
 from core.model import NetworkPerformance, RunnerPerformance
+import os.path
 
 
 class DiscordBot():
@@ -70,6 +71,13 @@ class DiscordBot():
             title=f"# nodes", description=description, color='ff66ff')
 
         self.webhook.add_embed(embed_n)
+
+        # add csv dump if exists
+        if os.path.isfile('node_runners.csv'):
+            with open("node_runners.csv", "rb") as f:
+                self.webhook.add_file(
+                    file=f.read(), filename='node_runners.csv')
+
         self.webhook.execute()
 
         # logging.info(response)

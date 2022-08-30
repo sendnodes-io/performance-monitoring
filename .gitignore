@@ -5,3 +5,4 @@
 /.vscode/launch.json
 secrets.txt
 .env
+node_runners.csv
