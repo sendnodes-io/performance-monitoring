@@ -11,8 +11,6 @@ spec:
     spec:
       template:
         spec:
-          securityContext:
-            runAsUser: 1000
           containers:
             - name: performance-monitoring
               image: sendnodes/performance-monitoring
@@ -20,6 +18,8 @@ spec:
                 - python
                 - ./main.py
                 - -d
+                - -n
+                - "25"
               envFrom:
                 - secretRef:
                     name: performance-monitoring-secrets
