@@ -3,8 +3,13 @@ GET_LARGEST_NODES_RUNNERS_QUERY = """query{
   largestNodeRunners{
     items{
       service_domain
-      validators
-      power
+      tokens
+      # power
+      # validators_power
+      # validators
+      # validators_tokens
+      # staked
+      # jailed
     }
     total_tokens
   }

@@ -64,37 +64,43 @@ def get_stats():
 
     # sort by power of domain
     big_nodes_runners.get(
-        'largestNodeRunners').get('items').sort(key=lambda x: x['power'], reverse=True)
+        'largestNodeRunners').get('items').sort(key=lambda x: x['tokens'], reverse=True)
 
-    # only look at top 25 most powerful domains
-    runners_names = [r['service_domain'] for r in big_nodes_runners.get(
-        'largestNodeRunners').get('items')][:25]
+    # only look at top 25 domains by tokens
+    node_runners = dict((r['service_domain'], r['tokens']) for r in big_nodes_runners.get(
+        'largestNodeRunners').get('items')[:25])
 
     # TODO: Reenable when their server support parallel
     # runners_data = asyncio.run(
-    #     download_runners_data_parallel(gql_client, runners_names))
+    #     download_runners_data_parallel(gql_client, node_runners))
 
     runners_data = asyncio.run(
-        download_runners_data_sequential(gql_client, runners_names))
+        download_runners_data_sequential(gql_client, node_runners))
     if not runners_data:
         raise Exception(f'Could not fetch nodes runners data')
 
     ts = datetime.now().strftime('%Y%m%d-%H%M%S')
+    domains = list(node_runners.keys())
     nodes_runners: List[RunnerPerformance] = []
     for i, r in enumerate(runners_data):
         response = r.get('getNodeRunnerSummary')
+        service_domain = domains[i]
+        tokens_by_15k = node_runners[service_domain] / 15e3 / 1e6
         if response:
             # aws_client.save_to_s3(
-            #    bucket_file=f'pokt-stats/{get_nodes_runners_perf.GET_NODES_RUNNER_PERF_QUERY_ID}-[{runners_names[i]}]-{ts}.json', data=response)
+            #    bucket_file=f'pokt-stats/{get_nodes_runners_perf.GET_NODES_RUNNER_PERF_QUERY_ID}-[{node_runners[i]}]-{ts}.json', data=response)
             #logging.debug(f'Successfully saved runners data')
             rp = RunnerPerformance(
-                runner_domain=runners_names[i],
+                runner_domain=service_domain,
                 total_last_48_hours=response.get('total_last_48_hours'),
                 total_last_24_hours=response.get('total_last_24_hours'),
                 total_last_6_hours=response.get('total_last_6_hours'),
-                avg_last_48_hours=response.get('avg_last_48_hours'),
-                avg_last_24_hours=response.get('avg_last_24_hours'),
-                avg_last_6_hours=response.get('avg_last_6_hours'),
+                avg_last_48_hours=response.get(
+                    'serviced_last_48_hours') / tokens_by_15k,
+                avg_last_24_hours=response.get(
+                    'serviced_last_24_hours') / tokens_by_15k,
+                avg_last_6_hours=response.get(
+                    'serviced_last_6_hours') / tokens_by_15k,
                 jailed_now=response.get('jailed_now'),
                 total_chains=response.get('total_chains'),
                 total_nodes=response.get('total_nodes'),
