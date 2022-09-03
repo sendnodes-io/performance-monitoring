@@ -5,6 +5,7 @@ from core import constants as cst
 from discord_webhook import DiscordEmbed, DiscordWebhook
 from core.model import NetworkPerformance, RunnerPerformance
 import os.path
+from tabulate import tabulate
 
 
 class DiscordBot():
@@ -17,7 +18,7 @@ class DiscordBot():
     def post_network_perf_data(self, network_data: NetworkPerformance):
         description = f'Today Pokt: {network_data.today_pokt}\n30d avg Pokt: {network_data.thirty_day_pokt_avg}'
         embed_net_perf = DiscordEmbed(
-            title=f'Network Perf', description=description, color='ffb0e3')
+            title=f'Network Perf', description=f'```{description}```', color='ffb0e3')
         self.webhook.remove_embeds()
         self.webhook.add_embed(embed_net_perf)
         self.webhook.execute()
@@ -29,47 +30,55 @@ class DiscordBot():
         self.webhook.remove_embeds()
         runners_data.sort(key=lambda r: (r.avg_last_48_hours,
                           r.runner_domain_sort), reverse=True)
-        description = '\n'.join(
-            [f'{r.runner_domain}:{round(r.avg_last_48_hours)}' for r in runners_data])
+        description = tabulate(
+            [[r.runner_domain, f'{round(r.avg_last_48_hours, 3)}'] for r in runners_data], ["domain", "Average 48h"], tablefmt="grid",  showindex=range(1, len(runners_data) + 1))
         embed_48 = DiscordEmbed(
-            title=f"Average 48h", description=description, color='03b2f8')
+            title=f"Average 48h", description=f'```{description}```', color='03b2f8')
         self.webhook.add_embed(embed_48)
 
         # Last 24 hours
         runners_data.sort(key=lambda r: (r.avg_last_24_hours,
                           r.runner_domain_sort), reverse=True)
-        description = '\n'.join(
-            [f'{r.runner_domain}:{round(r.avg_last_24_hours)}' for r in runners_data])
+        description = tabulate(
+            [[r.runner_domain, f'{round(r.avg_last_24_hours, 3)}'] for r in runners_data], ["domain", "Average 24h"], tablefmt="grid",  showindex=range(1, len(runners_data) + 1))
         embed_24 = DiscordEmbed(
-            title=f"Average 24h", description=description, color='66ff66')
+            title=f"Average 24h", description=f'```{description}```', color='66ff66')
         self.webhook.add_embed(embed_24)
 
         # Last 6 hours
         runners_data.sort(key=lambda r: (r.avg_last_6_hours,
                           r.runner_domain_sort), reverse=True)
-        description = '\n'.join(
-            [f'{r.runner_domain}:{round(r.avg_last_6_hours)}' for r in runners_data])
+        description = tabulate(
+            [[r.runner_domain, f'{round(r.avg_last_6_hours, 3)}'] for r in runners_data], ["domain", "Average 6h"], tablefmt="grid",  showindex=range(1, len(runners_data) + 1))
         embed_6 = DiscordEmbed(
-            title=f"Average 6h", description=description, color='7d7d73')
+            title=f"Average 6h", description=f'```{description}```', color='7d7d73')
         self.webhook.add_embed(embed_6)
 
         # Chains count
         runners_data.sort(key=lambda r: (
             r.total_chains, r.runner_domain_sort), reverse=True)
-        description = '\n'.join(
-            [f'{r.runner_domain}:{r.total_chains}' for r in runners_data])
+        description = tabulate(
+            [[r.runner_domain, f'{r.total_chains:,}'] for r in runners_data], ["domain", "# chains"], tablefmt="grid",  showindex=range(1, len(runners_data) + 1), colalign=("left", "left", "right"))
         embed_c = DiscordEmbed(
-            title=f"# chains", description=description, color='ffff00')
+            title=f"# chains", description=f'```{description}```', color='ffff00')
         self.webhook.add_embed(embed_c)
 
         # Nodes count
         runners_data.sort(key=lambda r: (
             r.total_nodes, r.runner_domain_sort), reverse=True)
-        description = '\n'.join(
-            [f'{r.runner_domain}:{r.total_nodes}' for r in runners_data])
+        description = tabulate(
+            [[r.runner_domain, f'{r.total_nodes:,}'] for r in runners_data], ["domain", "# nodes"], tablefmt="grid",  showindex=range(1, len(runners_data) + 1), colalign=("left", "left", "right"))
         embed_n = DiscordEmbed(
-            title=f"# nodes", description=description, color='ff66ff')
+            title=f"# nodes", description=f'```{description}```', color='ff66ff')
+        self.webhook.add_embed(embed_n)
 
+        # Total tokens
+        runners_data.sort(key=lambda r: (
+            r.tokens, r.runner_domain_sort), reverse=True)
+        description = tabulate(
+            [[r.runner_domain, f'{r.tokens:,}'] for r in runners_data], ["domain", "# tokens"], tablefmt="grid",  showindex=range(1, len(runners_data) + 1), colalign=("left", "left", "right"))
+        embed_n = DiscordEmbed(
+            title=f"# tokens", description=f'```{description}```', color='6a0dad')
         self.webhook.add_embed(embed_n)
 
         # add csv dump if exists
