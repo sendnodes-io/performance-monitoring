@@ -32,7 +32,7 @@ class DiscordBot():
         runners_data.sort(key=lambda r: (r.avg_last_48_hours,
                           r.runner_domain_sort), reverse=True)
         description = tabulate(
-            [[r.runner_domain, f'{round(r.avg_last_48_hours, 3)}'] for r in runners_data], ["domain", "Average 48h"], maxcolwidths=[22, 12])
+            [[r.runner_domain, f'{round(r.avg_last_48_hours, 3)}'] for r in runners_data], ["domain", "Average 48h"], maxcolwidths=[20, 10])
         embed_48 = DiscordEmbed(
             title=f"Average 48h", description=f'```{description}```', color='03b2f8')
         self.webhook.add_embed(embed_48)
@@ -45,7 +45,7 @@ class DiscordBot():
         runners_data.sort(key=lambda r: (r.avg_last_24_hours,
                           r.runner_domain_sort), reverse=True)
         description = tabulate(
-            [[r.runner_domain, f'{round(r.avg_last_24_hours, 3)}'] for r in runners_data], ["domain", "Average 24h"], maxcolwidths=[22, 12])
+            [[r.runner_domain, f'{round(r.avg_last_24_hours, 3)}'] for r in runners_data], ["domain", "Average 24h"], maxcolwidths=[20, 10])
         embed_24 = DiscordEmbed(
             title=f"Average 24h", description=f'```{description}```', color='66ff66')
         self.webhook.add_embed(embed_24)
@@ -58,7 +58,7 @@ class DiscordBot():
         runners_data.sort(key=lambda r: (r.avg_last_6_hours,
                           r.runner_domain_sort), reverse=True)
         description = tabulate(
-            [[r.runner_domain, f'{round(r.avg_last_6_hours, 3)}'] for r in runners_data], ["domain", "Average 6h"], maxcolwidths=[22, 12])
+            [[r.runner_domain, f'{round(r.avg_last_6_hours, 3)}'] for r in runners_data], ["domain", "Average 6h"], maxcolwidths=[20, 10])
         embed_6 = DiscordEmbed(
             title=f"Average 6h", description=f'```{description}```', color='7d7d73')
         self.webhook.add_embed(embed_6)
@@ -71,7 +71,7 @@ class DiscordBot():
         runners_data.sort(key=lambda r: (
             r.total_chains, r.runner_domain_sort), reverse=True)
         description = tabulate(
-            [[r.runner_domain, f'{r.total_chains:,}'] for r in runners_data], ["domain", "# chains"], colalign=("left", "right"), maxcolwidths=[22, 12])
+            [[r.runner_domain, f'{r.total_chains:,}'] for r in runners_data], ["domain", "# chains"], colalign=("left", "right"), maxcolwidths=[20, 10])
         embed_c = DiscordEmbed(
             title=f"# chains", description=f'```{description}```', color='ffff00')
         self.webhook.add_embed(embed_c)
@@ -84,7 +84,7 @@ class DiscordBot():
         runners_data.sort(key=lambda r: (
             r.total_nodes, r.runner_domain_sort), reverse=True)
         description = tabulate(
-            [[r.runner_domain, f'{r.total_nodes:,}'] for r in runners_data], ["domain", "# nodes"], colalign=("left", "right"), maxcolwidths=[22, 12])
+            [[r.runner_domain, f'{r.total_nodes:,}'] for r in runners_data], ["domain", "# nodes"], colalign=("left", "right"), maxcolwidths=[20, 10])
         embed_n = DiscordEmbed(
             title=f"# nodes", description=f'```{description}```', color='ff66ff')
         self.webhook.add_embed(embed_n)
@@ -97,7 +97,7 @@ class DiscordBot():
         runners_data.sort(key=lambda r: (
             r.tokens, r.runner_domain_sort), reverse=True)
         description = tabulate(
-            [[r.runner_domain, f'{round(r.tokens):,}'] for r in runners_data], ["domain", "# tokens"], colalign=("left", "right"), maxcolwidths=[22, 12])
+            [[r.runner_domain, f'{round(r.tokens):,}'] for r in runners_data], ["domain", "# tokens"], colalign=("left", "right"), maxcolwidths=[20, 10])
         embed_n = DiscordEmbed(
             title=f"# tokens", description=f'```{description}```', color='6a0dad')
         self.webhook.add_embed(embed_n)
