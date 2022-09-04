@@ -176,6 +176,9 @@ def Main():
         dict_writer.writerows([{k: v for k, v in rp.dict(
         ).items() if v is not None} for rp in runners_perf])
 
+    print([netperf])
+    print(runners_perf)
+
     if(options.discord):
         post_discord_message(netperf, runners_perf)
     if(options.tweet):
