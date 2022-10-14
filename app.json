@@ -1,0 +1,8 @@
+{
+  "cron": [
+    {
+      "command": "python ./main.py -d -n 25 | logger -t performance-monitoring",
+      "schedule": "0 * * * *"
+    }
+  ]
+}
