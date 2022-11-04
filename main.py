@@ -173,8 +173,10 @@ def Main():
     with open('node_runners.csv', 'w', newline='') as output_file:
         dict_writer = csv.DictWriter(output_file, keys)
         dict_writer.writeheader()
-        dict_writer.writerows([{k: v for k, v in rp.dict(
-        ).items() if v is not None} for rp in runners_perf])
+        dict_writer.writerows(
+            [{k: v for k, v in rp.dict().items() if v is not None}
+             for rp in runners_perf]
+        )
 
     print([netperf])
     print(runners_perf)
