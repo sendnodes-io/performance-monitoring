@@ -5,6 +5,7 @@ import csv
 from main import get_stats, post_discord_message
 from flask import Flask, g, jsonify
 from flask_apscheduler import APScheduler
+from flask_cors import CORS
 import logging
 
 load_dotenv()
@@ -20,6 +21,7 @@ class Config:
 
 # create app
 app = Flask(__name__)
+CORS(app)
 app.config.from_object(Config())
 
 # initialize scheduler
