@@ -1,15 +1,34 @@
-This repo is generating performance reports for the nodes runners based on pokt-scan graphql API.
+<img src="https://comparestakingservices.com/logo-dual.svg" width="760" alt="Compare Staking Services" />
 
-Sometimes the API doesn't return data for some of the nodes runners - although we attempt to retry on connection failure we won't return data for the node runners which we have failed to fetch from the API.
+# Compare Staking Services - Pocket Network Performance Monitoring
 
-## Overall flow description
+[Compare Pocket Network Staking Services](https://comparestakingservices.com/)
+
+A comparison of Pocket Network staking services. This list breaks down the services by their staking rewards, staking fees, and staking minimums.
+
+This repo pulls data from poktscan.com to calculate the gross rewards for each staking service provider. The data is then displayed on the website.
+
+> 💁‍♀️ Learn more about Pocket Network at [pokt.network](https://pokt.network).
+
+## 🙋‍♀️ First time here?
+
+Information is incorrect? Can’t find the answer you’re looking for? Reach out to our customer support team below.
+
+- [Twitter](https://t.me/CompareStakingServices)
+- [Discord](https://discord.gg/TmfYqaXzGb)
+
+## 👩🏻‍💻 Contributing
+
+SendNodes, Inc. is looking for amazing contributors. Feel free to fork the repo and start shipping code! For the latest news on our roadmap and milestones, please join our Discord server.
+
+## 👷‍♀️ Usage
+
+### Overall flow description
 
 1. We get the list of the top runners from pokt-scan API
 2. For each top runners we fetch statistics (avg perf 6 / 24 / 48 hrs)
 3. We post to SendNodes Discord channel the statistics
 4. We post to twitter the performances
-
-## Usage
 
 ### Environment variables
 
@@ -40,5 +59,5 @@ In order to run the program you can specificy command line arguments:
 - -t will get the statistics and psot the results to Twitter
 
 ```
-python ./main.py -d -n 25
+python ./main.py
 ```
