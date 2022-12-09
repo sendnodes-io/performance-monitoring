@@ -30,8 +30,12 @@ target_metadata = Base.metadata
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
+uri = os.environ.get('DATABASE_URL')
 
-config.set_main_option("sqlalchemy.url", os.environ.get("DATABASE_URL"))
+if uri and uri.startswith("postgres://"):
+    uri = uri.replace("postgres://", "postgresql://", 1)
+
+config.set_main_option("sqlalchemy.url", uri)
 
 
 def run_migrations_offline() -> None:
