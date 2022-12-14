@@ -45,19 +45,18 @@ class TwitterBot():
             logging.error(f'An error occurred when sending test tweet: {ex}')
 
     def post_nodes_runners_perf(self, runners_data: List[RunnerPerformance], perf_avg=24):
-        for r in runners_data:
-            r.runner_domain_sort = 1000 if "sendnodes.org" in r.runner_domain else 0
+        def highlight_sendnodes(x, y):
+            return str(
+                x) + ":" + str(y) + " \U0001F680" if "sendnodes.org" in x.lower() else str(x) + ":" + str(y)
 
-        def highlight_sendnodes(x, y): return str(
-            x) + ":" + str(y) + " \U0001F680" if "sendnodes.org" in x.lower() else str(x) + ":" + str(y)
         if perf_avg == 24:
             runners_data.sort(key=lambda r: (
-                r.avg_last_24_hours, r.runner_domain_sort), reverse=True)
+                r.avg_last_24_hours), reverse=True)
             tweet = 'Top $POKT node runners 24h\n' + '\n'.join(
                 [f'{highlight_sendnodes(r.runner_domain, round(r.avg_last_24_hours))}' for r in runners_data])
         elif perf_avg == 48:
             runners_data.sort(key=lambda r: (
-                r.avg_last_48_hours, r.runner_domain_sort), reverse=True)
+                r.avg_last_48_hours), reverse=True)
             tweet = 'Top $POKT node runners 48h \n' + '\n'.join(
                 [f'{highlight_sendnodes(r.runner_domain, round(r.avg_last_48_hours))}' for r in runners_data])
         else:
@@ -75,7 +74,7 @@ class TwitterBot():
             while row_index < len(rows) - 1:
                 while total_length + len(rows[row_index]) < TWEET_LIMIT:
                     total_length += len(rows[row_index])
-                    if row_index == len(rows)-1:
+                    if row_index == len(rows) - 1:
                         break
                     else:
                         row_index += 1

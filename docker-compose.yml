@@ -1,0 +1,10 @@
+
+services:
+  db:
+    image: postgres:14.5
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-supersecret}
+      POSTGRES_USER: ${POSTGRES_USER:-perfmon}
+      POSTGRES_DB: ${POSTGRES_DB:-pokt_scan_performance_monitoring}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"

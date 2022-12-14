@@ -54,22 +54,28 @@ def get_stats(num_node_runners=25):
 
     logging.info('====== Data collection phase ======')
     logging.info('Getting biggest runners data')
-    big_nodes_runners = asyncio.run(gql_client.send_query(
+    big_nodes_runners_response = asyncio.run(gql_client.send_query(
         get_largest_nodes_runners_query.GET_LARGEST_NODES_RUNNERS_QUERY,
         get_largest_nodes_runners_query.GET_LARGEST_NODES_RUNNERS_QUERY_ID)
     )
-    if not big_nodes_runners:
+    if not big_nodes_runners_response:
         logging.warn('Skipping saving big nodes runners no data returned')
         raise Exception(
             f'Could not retrieve big nodes runners exiting - will improve soon')
 
+    big_nodes_runners = big_nodes_runners_response.get('largestNodeRunners').get('items')
+
     # sort by power of domain
-    big_nodes_runners.get(
-        'largestNodeRunners').get('items').sort(key=lambda x: x['tokens'], reverse=True)
+    big_nodes_runners.sort(key=lambda x: x['tokens'], reverse=True)
 
     # only look at top 25 domains by tokens
-    node_runners = dict((r['service_domain'], r['tokens']) for r in big_nodes_runners.get(
-        'largestNodeRunners').get('items')[:num_node_runners])
+    node_runners = dict((r['service_domain'], r['tokens']) for r in big_nodes_runners[:num_node_runners])
+
+    # include hard-coded domains
+    hard_coded_domains = ['aapokt.com']
+    for domain in hard_coded_domains:
+        node_runner = next((r for r in big_nodes_runners if r['service_domain'] == domain), None)
+        node_runners[domain] = node_runner['tokens'] if node_runner else 0
 
     # TODO: Reenable when their server support parallel
     # runners_data = asyncio.run(
