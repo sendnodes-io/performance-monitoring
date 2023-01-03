@@ -11,7 +11,7 @@ Base = declarative_base()
 class RunnerPerformanceOrm(Base):
     __tablename__ = 'runner_performance'
     id = Column(BigInteger, primary_key=True)
-    runner_domain = Column(String, unique=True, nullable=False)
+    runner_domain = Column(String, unique=False, nullable=False)
     avg_last_48_hours = Column(DECIMAL, nullable=False)
     avg_last_24_hours = Column(DECIMAL, nullable=False)
     avg_last_6_hours = Column(DECIMAL, nullable=False)

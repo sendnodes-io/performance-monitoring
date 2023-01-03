@@ -72,7 +72,7 @@ def get_stats(num_node_runners=25):
     node_runners = dict((r['service_domain'], r['tokens']) for r in big_nodes_runners[:num_node_runners])
 
     # include hard-coded domains
-    hard_coded_domains = ['aapokt.com']
+    hard_coded_domains = ['aapokt.com', 'cryptonode.tools']
     for domain in hard_coded_domains:
         node_runner = next((r for r in big_nodes_runners if r['service_domain'] == domain), None)
         node_runners[domain] = node_runner['tokens'] if node_runner else 0
