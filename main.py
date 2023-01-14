@@ -3,8 +3,6 @@ import asyncio
 from datetime import datetime
 import logging
 import optparse
-from random import randint
-import time
 from typing import List
 from core.discord import DiscordBot
 from core.gql_client import GqlClient
@@ -13,6 +11,10 @@ from core.tweet_utils import TwitterBot
 from gql_requests import get_largest_nodes_runners_query, get_nodes_runners_perf, get_network_perf_query
 from dotenv import load_dotenv
 import csv
+
+UPOKT_DENOM = 1e6
+POKT_NODE_MAX = 60e3
+POKT_NODE_MIN = 15e3
 
 load_dotenv()
 
@@ -59,7 +61,7 @@ def get_stats(num_node_runners=25):
         get_largest_nodes_runners_query.GET_LARGEST_NODES_RUNNERS_QUERY_ID)
     )
     if not big_nodes_runners_response:
-        logging.warn('Skipping saving big nodes runners no data returned')
+        logging.warning('Skipping saving big nodes runners no data returned')
         raise Exception(
             f'Could not retrieve big nodes runners exiting - will improve soon')
 
@@ -90,28 +92,67 @@ def get_stats(num_node_runners=25):
     domains = list(node_runners.keys())
     nodes_runners: List[RunnerPerformance] = []
     for i, r in enumerate(runners_data):
-        response = r.get('getNodeRunnerSummary')
+        node_runner_summ = r.get('getNodeRunnerSummary')
         service_domain = domains[i]
-        tokens_by_15k = node_runners[service_domain] / 15e3 / 1e6
-        if response:
+        if node_runner_summ:
+            # calculate number of 15k POKT nodes using:
+            # (Total tokens staked - (Total Validator Tokens - (Total Validator Nodes * 60k))) / 15k
+            validator_nodes = node_runner_summ.get('validators')
+            validator_tokens_pokt = node_runner_summ.get('total_validator_tokens_staked') / UPOKT_DENOM
+            validator_tokens_excess_pokt = validator_tokens_pokt - validator_nodes * POKT_NODE_MAX
+            all_tokens_staked_pokt = node_runner_summ.get('total_tokens_staked') / UPOKT_DENOM
+            num_of_15k_pokt_nodes = (all_tokens_staked_pokt - validator_tokens_excess_pokt) / POKT_NODE_MIN
+
             # aws_client.save_to_s3(
             #    bucket_file=f'pokt-stats/{get_nodes_runners_perf.GET_NODES_RUNNER_PERF_QUERY_ID}-[{node_runners[i]}]-{ts}.json', data=response)
             #logging.debug(f'Successfully saved runners data')
             rp = RunnerPerformance(
                 runner_domain=service_domain,
-                # total_last_48_hours=response.get('total_last_48_hours'),
-                # total_last_24_hours=response.get('total_last_24_hours'),
-                # total_last_6_hours=response.get('total_last_6_hours'),
-                avg_last_48_hours=response.get(
-                    'serviced_last_48_hours') / tokens_by_15k,
-                avg_last_24_hours=response.get(
-                    'serviced_last_24_hours') / tokens_by_15k,
-                avg_last_6_hours=response.get(
-                    'serviced_last_6_hours') / tokens_by_15k,
-                # jailed_now=response.get('jailed_now'),
-                total_chains=response.get('total_chains'),
-                total_nodes=response.get('total_nodes'),
-                tokens=node_runners[service_domain] / 1e6
+                relays_last_48_hours=node_runner_summ.get('relays_last_48_hours'),
+                relays_last_24_hours=node_runner_summ.get('relays_last_24_hours'),
+                relays_last_6_hours=node_runner_summ.get('relays_last_6_hours'),
+                serviced_last_48_hours=node_runner_summ.get('serviced_last_48_hours'),
+                serviced_last_24_hours=node_runner_summ.get('serviced_last_24_hours'),
+                serviced_last_6_hours=node_runner_summ.get('serviced_last_6_hours'),
+                producer_rewards_last_48_hours=node_runner_summ.get('producer_rewards_last_48_hours'),
+                producer_rewards_last_24_hours=node_runner_summ.get('producer_rewards_last_24_hours'),
+                producer_rewards_last_6_hours=node_runner_summ.get('producer_rewards_last_6_hours'),
+                total_last_48_hours=node_runner_summ.get('total_last_48_hours'),
+                total_last_24_hours=node_runner_summ.get('total_last_24_hours'),
+                total_last_6_hours=node_runner_summ.get('total_last_6_hours'),
+                avg_relays_last_48_hours=node_runner_summ.get('avg_relays_last_48_hours'),
+                avg_relays_last_24_hours=node_runner_summ.get('avg_relays_last_24_hours'),
+                avg_relays_last_6_hours=node_runner_summ.get('avg_relays_last_6_hours'),
+                avg_last_48_hours=node_runner_summ.get('serviced_last_48_hours') / num_of_15k_pokt_nodes,
+                avg_last_24_hours=node_runner_summ.get('serviced_last_24_hours') / num_of_15k_pokt_nodes,
+                avg_last_6_hours=node_runner_summ.get('serviced_last_6_hours') / num_of_15k_pokt_nodes,
+                avg_base_last_48_hours=node_runner_summ.get('avg_base_last_48_hours'),
+                avg_base_last_24_hours=node_runner_summ.get('avg_base_last_24_hours'),
+                avg_base_last_6_hours=node_runner_summ.get('avg_base_last_6_hours'),
+                avg_total_last_48_hours=node_runner_summ.get('avg_total_last_48_hours'),
+                avg_total_last_24_hours=node_runner_summ.get('avg_total_last_24_hours'),
+                avg_total_last_6_hours=node_runner_summ.get('avg_total_last_6_hours'),
+                avg_producer_last_48_hours=node_runner_summ.get('avg_producer_last_48_hours'),
+                avg_producer_last_24_hours=node_runner_summ.get('avg_producer_last_24_hours'),
+                avg_producer_last_6_hours=node_runner_summ.get('avg_producer_last_6_hours'),
+                producer_times_last_48_hours=node_runner_summ.get('producer_times_last_48_hours'),
+                producer_times_last_24_hours=node_runner_summ.get('producer_times_last_24_hours'),
+                producer_times_last_6_hours=node_runner_summ.get('producer_times_last_6_hours'),
+                total_tokens_staked=node_runner_summ.get('total_tokens_staked') / UPOKT_DENOM,
+                total_validator_tokens_staked=node_runner_summ.get('total_validator_tokens_staked') / UPOKT_DENOM,
+                validators=node_runner_summ.get('validators'),
+                last_height=node_runner_summ.get('last_height'),
+                total_pending_relays=node_runner_summ.get('total_pending_relays'),
+                total_estimated_pending_rewards=node_runner_summ.get('total_estimated_pending_rewards'),
+                total_chains=node_runner_summ.get('total_chains'),
+                jailed_now=node_runner_summ.get('jailed_now'),
+                total_balance=node_runner_summ.get('total_balance'),
+                total_output_balance=node_runner_summ.get('total_output_balance'),
+                total_nodes=node_runner_summ.get('total_nodes'),
+                nodes_staked=node_runner_summ.get('nodes_staked'),
+                nodes_unstaked=node_runner_summ.get('nodes_unstaked'),
+                nodes_unstaking=node_runner_summ.get('nodes_unstaking'),
+                tokens=all_tokens_staked_pokt
             )
             nodes_runners.append(rp)
 
@@ -122,16 +163,16 @@ def get_stats(num_node_runners=25):
     if not network_performance:
         logging.error(f'Could not fetch data for network perf.')
     else:
-        response = network_performance.get('getPoktEarnPerformance')
-        if response:
-            servicer = response.get('servicer')
+        node_runner_summ = network_performance.get('getPoktEarnPerformance')
+        if node_runner_summ:
+            servicer = node_runner_summ.get('servicer')
             if servicer:
                 net_perf = NetworkPerformance(
-                    max_pokt=servicer.get('thirty_days_max_pokt_avg') / 1e6,
+                    max_pokt=servicer.get('thirty_days_max_pokt_avg') / UPOKT_DENOM,
                     today_pokt=servicer.get(
-                        'twenty_fours_hs_less_pokt_avg') / 1e6,
+                        'twenty_fours_hs_less_pokt_avg') / UPOKT_DENOM,
                     thirty_day_pokt_avg=servicer.get(
-                        'thirty_days_max_pokt_avg') / 1e6,
+                        'thirty_days_max_pokt_avg') / UPOKT_DENOM,
                 )
     return net_perf, nodes_runners
 
