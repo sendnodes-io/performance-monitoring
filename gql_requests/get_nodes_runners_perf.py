@@ -1,19 +1,51 @@
 GET_NODES_RUNNER_PERF_QUERY_ID = "get_nodes_runner_perf"
-GET_NODES_RUNNER_PERF_QUERY = """query getPerf($domain:String!){
+GET_NODES_RUNNER_PERF_QUERY = """
+query getPerf($domain:String!){
   getNodeRunnerSummary(domain:$domain){
+    relays_last_48_hours
+    relays_last_24_hours
+    relays_last_6_hours
     serviced_last_48_hours
     serviced_last_24_hours
     serviced_last_6_hours
+    producer_rewards_last_48_hours
+    producer_rewards_last_24_hours
+    producer_rewards_last_6_hours
     total_last_48_hours
     total_last_24_hours
     total_last_6_hours
+    avg_relays_last_48_hours
+    avg_relays_last_24_hours
+    avg_relays_last_6_hours
     avg_last_48_hours
     avg_last_24_hours
     avg_last_6_hours
-    jailed_now
+    avg_base_last_48_hours
+    avg_base_last_24_hours
+    avg_base_last_6_hours
+    avg_total_last_48_hours
+    avg_total_last_24_hours
+    avg_total_last_6_hours
+    avg_producer_last_48_hours
+    avg_producer_last_24_hours
+    avg_producer_last_6_hours
+    producer_times_last_48_hours
+    producer_times_last_24_hours
+    producer_times_last_6_hours
+    total_tokens_staked
+    total_validator_tokens_staked
+    validators
+    last_height
+    total_pending_relays
+    total_estimated_pending_rewards
     total_chains
-    total_nodes
+    jailed_now
     total_balance
+    total_output_balance
+    total_nodes
+    nodes_staked
+    nodes_unstaked
+    nodes_unstaking
   }
 }
 """
