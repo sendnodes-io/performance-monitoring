@@ -19,5 +19,6 @@ jobs:
       - name: Push to dokku
         uses: dokku/github-action@master
         with:
+          branch: master
           git_remote_url: "ssh://dokku@pokt-stats.sendnodes.io:22/pokt-scan-performance-monitoring"
           ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
