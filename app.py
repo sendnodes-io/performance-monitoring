@@ -158,17 +158,17 @@ def runners_perf_v2():
     with core.db.ENGINE.connect() as conn:
         data = conn.execute(text("""
 select runner_domain,
-       avg(avg_last_48_hours) as avg_last_48_hours,
-       avg(avg_last_24_hours) as avg_last_24_hours,
-       avg(avg_last_6_hours)  as avg_last_6_hours,
-       avg(total_chains)      as total_chains,
-       avg(total_nodes)       as total_nodes,
-       avg(tokens)            as tokens
+       avg(avg_last_48_hours) as "7d_avg_last_48_hours",
+       avg(avg_last_24_hours) as "7d_avg_last_24_hours",
+       avg(avg_last_6_hours)  as "7d_avg_last_6_hours",
+       avg(total_chains)      as "7d_avg_total_chains",
+       avg(total_nodes)       as "7d_avg_total_nodes",
+       avg(tokens)            as "7d_avg_tokens"
 from runner_performance
 where created_at > now() - interval '7 day'
 group by runner_domain
 """)).all()
-        return jsonify([dict(RunnerPerformance.from_orm(row)) for row in data])
+        return jsonify([dict(row) for row in data])
 
 
 logging.info('Starting app')
