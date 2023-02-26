@@ -2,6 +2,8 @@ from typing import Optional
 from sqlalchemy import Index, Column, DECIMAL, String, BigInteger, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from pydantic import BaseModel
+from typing import List
+import decimal
 
 Base = declarative_base()
 
@@ -120,3 +122,15 @@ class NetworkPerformance(BaseModel):
     thirty_day_relays_avg: Optional[int]
     today_pokt: Optional[float]
     today_relays: Optional[int]
+
+
+class RunnerPerformanceSummary(BaseModel):
+    # the runner domain
+    runner_domain: str
+    # the raw data should have one row per day
+    rows: List[dict]
+    # the average POKT servicer reward per 15K POKT staked for the dates
+    avg_serviced: decimal.Decimal
+    # the average number of 15K POKT nodes for the dates
+    avg_num_of_15k_pokt_nodes: decimal.Decimal
+
