@@ -284,7 +284,7 @@ def runners_perf_v2():
     for runner_domain, perf7d in data['summary_rows_by_runner'].items():
         result.append({
             "runner_domain": perf7d.runner_domain,
-            "7d_avg_last_24_hours": perf7d.avg_serviced,
+            "avg_serviced_per_15k": perf7d.avg_serviced,
             "rows": perf7d.rows,
             "end_date": data['end_date'],
             "start_date": data['start_date']
