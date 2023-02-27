@@ -95,13 +95,10 @@ def get_stats(num_node_runners=25):
         node_runner_summ = r.get('getNodeRunnerSummary')
         service_domain = domains[i]
         if node_runner_summ:
-            # calculate number of 15k POKT nodes using:
-            # (Total tokens staked - (Total Validator Tokens - (Total Validator Nodes * 60k))) / 15k
             validator_nodes = node_runner_summ.get('validators')
             validator_tokens_pokt = node_runner_summ.get('total_validator_tokens_staked') / UPOKT_DENOM
-            validator_tokens_excess_pokt = validator_tokens_pokt - validator_nodes * POKT_NODE_MAX
             all_tokens_staked_pokt = node_runner_summ.get('total_tokens_staked') / UPOKT_DENOM
-            num_of_15k_pokt_nodes = (all_tokens_staked_pokt - validator_tokens_excess_pokt) / POKT_NODE_MIN
+            num_of_15k_pokt_nodes = servicer_node_summary(validator_nodes, validator_tokens_pokt, all_tokens_staked_pokt)
 
             # aws_client.save_to_s3(
             #    bucket_file=f'pokt-stats/{get_nodes_runners_perf.GET_NODES_RUNNER_PERF_QUERY_ID}-[{node_runners[i]}]-{ts}.json', data=response)
@@ -138,8 +135,8 @@ def get_stats(num_node_runners=25):
                 producer_times_last_48_hours=node_runner_summ.get('producer_times_last_48_hours'),
                 producer_times_last_24_hours=node_runner_summ.get('producer_times_last_24_hours'),
                 producer_times_last_6_hours=node_runner_summ.get('producer_times_last_6_hours'),
-                total_tokens_staked=node_runner_summ.get('total_tokens_staked') / UPOKT_DENOM,
-                total_validator_tokens_staked=node_runner_summ.get('total_validator_tokens_staked') / UPOKT_DENOM,
+                total_tokens_staked=all_tokens_staked_pokt,
+                total_validator_tokens_staked= validator_tokens_pokt,
                 validators=node_runner_summ.get('validators'),
                 last_height=node_runner_summ.get('last_height'),
                 total_pending_relays=node_runner_summ.get('total_pending_relays'),
@@ -175,6 +172,14 @@ def get_stats(num_node_runners=25):
                         'thirty_days_max_pokt_avg') / UPOKT_DENOM,
                 )
     return net_perf, nodes_runners
+
+
+# calculate number of 15k POKT servicer nodes using:
+# (Total tokens staked - (Total Validator Tokens - (Total Validator Nodes * 60k))) / 15k
+def servicer_node_summary(validator_nodes, validator_tokens_pokt, all_tokens_staked_pokt):
+    validator_tokens_excess_pokt = validator_tokens_pokt - validator_nodes * POKT_NODE_MAX
+    num_of_15k_pokt_nodes = (all_tokens_staked_pokt - validator_tokens_excess_pokt) / POKT_NODE_MIN
+    return num_of_15k_pokt_nodes
 
 
 def post_discord_message(network_performance: NetworkPerformance,
