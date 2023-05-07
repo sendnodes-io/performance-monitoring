@@ -180,7 +180,7 @@ class DiscordBot:
             embed = DiscordEmbed(
                 title="Chain Reward Last 24hrs",
                 description=f"```\n{chunk}\n```",
-                color=0x03B2F8,
+                color=0xFF9500,
             )
             self.webhook.add_embed(embed)
             self.webhook.execute()
