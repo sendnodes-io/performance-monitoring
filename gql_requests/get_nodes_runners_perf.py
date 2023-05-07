@@ -1,39 +1,39 @@
 GET_NODES_RUNNER_PERF_QUERY_ID = "get_nodes_runner_perf"
 GET_NODES_RUNNER_PERF_QUERY = """
 query getPerf($domain:String!){
-  getNodeRunnerSummary(domain:$domain){
-    relays_last_48_hours
-    relays_last_24_hours
-    relays_last_6_hours
-    serviced_last_48_hours
-    serviced_last_24_hours
-    serviced_last_6_hours
-    producer_rewards_last_48_hours
-    producer_rewards_last_24_hours
-    producer_rewards_last_6_hours
-    total_last_48_hours
-    total_last_24_hours
-    total_last_6_hours
-    avg_relays_last_48_hours
-    avg_relays_last_24_hours
-    avg_relays_last_6_hours
-    avg_last_48_hours
-    avg_last_24_hours
-    avg_last_6_hours
-    avg_base_last_48_hours
-    avg_base_last_24_hours
-    avg_base_last_6_hours
-    avg_total_last_48_hours
-    avg_total_last_24_hours
-    avg_total_last_6_hours
-    avg_producer_last_48_hours
-    avg_producer_last_24_hours
-    avg_producer_last_6_hours
-    producer_times_last_48_hours
-    producer_times_last_24_hours
-    producer_times_last_6_hours
+  GetSummaryForNodeSelection(input:{service_domain:$domain}){
+    relays_last_48hrs
+    relays_last_24hrs
+    relays_last_6hrs
+    servicer_rewards_last_48hrs
+    servicer_rewards_last_24hrs
+    servicer_rewards_last_6hrs
+    producer_rewards_last_48hrs
+    producer_rewards_last_24hrs
+    producer_rewards_last_6hrs
+    total_rewards_last_48hrs
+    total_rewards_last_24hrs
+    total_rewards_last_6hrs
+    avg_relays_last_48hrs
+    avg_relays_last_24hrs
+    avg_relays_last_6hrs
+    avg_servicer_rewards_last_48hrs
+    avg_servicer_rewards_last_24hrs
+    avg_servicer_rewards_last_6hrs
+    avg_base_servicer_rewards_last_48hrs
+    avg_base_servicer_rewards_last_24hrs
+    avg_base_servicer_rewards_last_6hrs
+    avg_total_rewards_last_48hrs
+    avg_total_rewards_last_24hrs
+    avg_total_rewards_last_6hrs
+    avg_producer_rewards_last_48hrs
+    avg_producer_rewards_last_24hrs
+    avg_producer_rewards_last_6hrs
+    producer_times_last_48hrs
+    producer_times_last_24hrs
+    producer_times_last_6hrs
     total_tokens_staked
-    total_validator_tokens_staked
+    validators_tokens_staked
     validators
     last_height
     total_pending_relays

@@ -9,7 +9,7 @@ Base = declarative_base()
 
 
 class RunnerPerformanceOrm(Base):
-    __tablename__ = 'runner_performance'
+    __tablename__ = "runner_performance"
     id = Column(BigInteger, primary_key=True)
     runner_domain = Column(String, unique=False, nullable=False)
     relays_last_48_hours = Column(BigInteger, nullable=False)
@@ -60,7 +60,7 @@ class RunnerPerformanceOrm(Base):
     created_at = Column(DateTime, nullable=False)
 
 
-Index('runner_performance_created_at_idx', RunnerPerformanceOrm.created_at)
+Index("runner_performance_created_at_idx", RunnerPerformanceOrm.created_at)
 
 
 class RunnerPerformance(BaseModel):
@@ -134,3 +134,29 @@ class RunnerPerformanceSummary(BaseModel):
     # the average number of 15K POKT nodes for the dates
     avg_num_of_15k_pokt_nodes: decimal.Decimal
 
+
+class ChainRewardOrm(Base):
+    __tablename__ = "chain_rewards"
+    id = Column(BigInteger, primary_key=True)
+    chain = Column(String, unique=False, nullable=False)
+    total_relays = Column(BigInteger, nullable=False)
+    total_pokt = Column(BigInteger, nullable=False)
+    staked_nodes_avg = Column(BigInteger, nullable=False)
+    pokt_avg = Column(DECIMAL, nullable=False)
+    relays_avg = Column(DECIMAL, nullable=False)
+    created_at = Column(DateTime, nullable=False)
+
+
+Index("chain_rewards_created_at_idx", ChainRewardOrm.created_at)
+
+
+class ChainReward(BaseModel):
+    chain: str
+    total_relays: int
+    total_pokt: int
+    staked_nodes_avg: int
+    pokt_avg: decimal.Decimal
+    relays_avg: decimal.Decimal
+
+    class Config:
+        orm_mode = True
