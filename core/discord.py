@@ -1,3 +1,7 @@
+import json
+import logging
+
+import requests
 import constants
 from typing import List
 from unittest import runner
@@ -154,10 +158,24 @@ class DiscordBot:
         # Select the top 25 chains
         top_chains = chain_rewards_data[:25]
 
+        pokt_chains_map = {}
+        try:
+            # try https://poktscan-v1.nyc3.digitaloceanspaces.com/pokt-chains-map.json
+            pokt_chains_map = requests.get(
+                "https://poktscan-v1.nyc3.digitaloceanspaces.com/pokt-chains-map.json"
+            ).json()
+        except Exception as e:
+            logging.error("Error fetching pokt-chains-map.json from poktscan", e)
+
+        # Load pokt-chains-map.json from local file as fallback
+        if not pokt_chains_map:
+            with open("../pokt-chains-map.json", "r") as f:
+                pokt_chains_map = json.load(f)
+
         # Prepare data for tabulate
         tabulated_data = [
             [
-                r.chain,
+                pokt_chains_map.get(r.chain, {"label": r.chain})["label"],
                 round(r.pokt_avg / decimal.Decimal(constants.UPOKT_DENOM), 2),
                 f"{round(r.staked_nodes_avg):,}",
                 f"{round(r.total_relays):,}",
