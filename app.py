@@ -29,7 +29,7 @@ logging.basicConfig(level=logging.INFO, format="%(name)s - %(levelname)s - %(mes
 
 
 class Config:
-    SCHEDULER_API_ENABLED = True
+    SCHEDULER_API_ENABLED = False
     DEBUG = os.environ.get("FLASK_ENV", "development") == "development"
     CACHE_TYPE = "SimpleCache"
 
