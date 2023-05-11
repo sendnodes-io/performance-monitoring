@@ -1,0 +1,352 @@
+{
+  "0029": {
+    "label": "Algorand Mainnet (0029)",
+    "image": "Algorand.png",
+    "mainColor": "#000000"
+  },
+  "000D": {
+    "label": "Algorand Archival (000D)",
+    "image": "Algorand.png",
+    "mainColor": "#000000"
+  },
+  "0045": {
+    "label": "Algorand Testnet (000G)",
+    "image": "Algorand.png",
+    "mainColor": "#000000"
+  },
+  "0A45": {
+    "label": "Algorand Archival Testnet (0A45)",
+    "image": "Algorand.png",
+    "mainColor": "#000000"
+  },
+  "0030": {
+    "label": "Arweave Mainnet (0030)",
+    "image": "Arweave.png",
+    "mainColor": "#010306"
+  },
+  "0003": {
+    "label": "Avalanche Mainnet (0003)",
+    "image": "Avalanche.png",
+    "mainColor": "#e84142"
+  },
+  "00A3": {
+    "label": "Avalanche Archival (00A3)",
+    "image": "Avalanche.png",
+    "mainColor": "#e84142"
+  },
+  "000E": {
+    "label": "Avalanche Fuji (000E)",
+    "image": "Avalanche.png",
+    "mainColor": "#e84142"
+  },
+  "0004": {
+    "label": "BSC Mainnet (0004)",
+    "image": "BsC.png",
+    "mainColor": "#ffbb0c"
+  },
+  "0010": {
+    "label": "BSC Archival (0010)",
+    "image": "BsC.png",
+    "mainColor": "#ffbb0c"
+  },
+  "0011": {
+    "label": "BSC Testnet (0011)",
+    "image": "BsC.png",
+    "mainColor": "#ffbb0c"
+  },
+  "0012": {
+    "label": "BSC Testnet Archival (0012)",
+    "image": "BsC.png",
+    "mainColor": "#ffbb0c"
+  },
+  "0002": {
+    "label": "Bitcoin Mainnet (0002)",
+    "image": "Bitcoin.png",
+    "mainColor": "#fea901"
+  },
+  "0021": {
+    "label": "Ethereum (0021)",
+    "image": "Ethereum.png",
+    "mainColor": "#716b94"
+  },
+  "0022": {
+    "label": "Ethereum Archival (0022)",
+    "image": "Ethereum.png",
+    "mainColor": "#716b94"
+  },
+  "0023": {
+    "label": "Ethereum Ropsten (0023)",
+    "image": "Ethereum.png",
+    "mainColor": "#716b94"
+  },
+  "0024": {
+    "label": "Ethereum Kovan (0024)",
+    "image": "Ethereum.png",
+    "mainColor": "#716b94"
+  },
+  "0025": {
+    "label": "Ethereum Rinkeby (0025)",
+    "image": "Ethereum.png",
+    "mainColor": "#716b94"
+  },
+  "0026": {
+    "label": "Ethereum Goerli (0026)",
+    "image": "Ethereum.png",
+    "mainColor": "#716b94"
+  },
+  "0028": {
+    "label": "ETH Archival Trace (0028)",
+    "image": "Ethereum.png",
+    "mainColor": "#716b94"
+  },
+  "0046": {
+    "label": "Evmos Mainnet (0046)",
+    "image": "Evmos.png",
+    "mainColor": "#2d2925"
+  },
+  "0005": {
+    "label": "FUSE Mainnet (0005)",
+    "image": "Fuse.png",
+    "mainColor": "#2d2925"
+  },
+  "000A": {
+    "label": "FUSE Archival (000A)",
+    "image": "Fuse.png",
+    "mainColor": "#2d2925"
+  },
+  "0040": {
+    "label": "Harmony Shard 0 (0040)",
+    "image": "Harmony.png",
+    "mainColor": "#39dbcc"
+  },
+  "0A40": {
+    "label": "Harmony Shard 0 Archival (0A40)",
+    "image": "Harmony.png",
+    "mainColor": "#39dbcc"
+  },
+  "0041": {
+    "label": "Harmony Shard 1 (0041)",
+    "image": "Harmony.png",
+    "mainColor": "#39dbcc"
+  },
+  "0A41": {
+    "label": "Harmony Shard 1 Archival (0A41)",
+    "image": "Harmony.png",
+    "mainColor": "#39dbcc"
+  },
+  "0042": {
+    "label": "Harmony Shard 2 (0042)",
+    "image": "Harmony.png",
+    "mainColor": "#39dbcc"
+  },
+  "0A42": {
+    "label": "Harmony Shard 2 Archival (0A42)",
+    "image": "Harmony.png",
+    "mainColor": "#39dbcc"
+  },
+  "0043": {
+    "label": "Harmony Shard 0 (0043)",
+    "image": "Harmony.png",
+    "mainColor": "#39dbcc"
+  },
+  "0A43": {
+    "label":"Harmony Shard 0 Archival (0A43)",
+    "image": "Harmony.png",
+    "mainColor": "#39dbcc"
+  },
+  "0044": {
+    "label": "IoTeX Mainnet (0044)",
+    "image": "Iotex.png",
+    "mainColor": "#06c6ad"
+  },
+  "0001": {
+    "label":"POKT Mainnet (0001)",
+    "image": "Pocket.png",
+    "mainColor": "#1d8aed"
+  },
+  "0009": {
+    "label": "Polygon Mainnet (0009)",
+    "image": "Polygon.png",
+    "mainColor": "#8247e5"
+  },
+  "000B": {
+    "label": "Polygon Archival (000B)",
+    "image": "Polygon.png",
+    "mainColor": "#8247e5"
+  },
+  "000F": {
+    "label": "Polygon Mumbai (000F)",
+    "image": "Polygon.png",
+    "mainColor": "#8247e5"
+  },
+  "00AF": {
+    "label": "Polygon Mumbai Archival (00AF)",
+    "image": "Polygon.png",
+    "mainColor": "#8247e5"
+  },
+  "0006": {
+    "label": "Solana Mainnet (0006)",
+    "image": "Solana.png",
+    "mainColor": "#818ad2"
+  },
+  "0031": {
+    "label": "Solana Testnet (0031)",
+    "image": "Solana.png",
+    "mainColor": "#818ad2"
+  },
+  "0027": {
+    "label": "Gnosis - xDai (0027)",
+    "image": "xDai.png",
+    "mainColor": "#04795b"
+  },
+  "000C": {
+    "label": "Gnosis - xDAI Archival (000C)",
+    "image": "xDai.png",
+    "mainColor": "#04795b"
+  },
+  "0047": {
+    "label": "OEC Mainnet (0047)",
+    "image": "Oec.png",
+    "mainColor": "#1e63ec"
+  },
+  "0048": {
+    "label": "Boba Mainnet (0048)",
+    "image": "Boba.png",
+    "mainColor": "#e3ff33"
+  },
+  "03DF": {
+    "label": "DFKchain Subnet (03DF)",
+    "image": "DFK.png",
+    "mainColor": "#85c700"
+  },
+  "0049": {
+    "label": "Fantom (0049)",
+    "image": "Fantom.png",
+    "mainColor": "#13b5ec"
+  },
+  "0050": {
+    "label": "Moonbeam Mainnet (0050)",
+    "image": "Moonbeam.png",
+    "mainColor": "#90165c"
+  },
+  "0051": {
+    "label": "Moonriver Mainnet (0051)",
+    "image": "Moonriver.png",
+    "mainColor": "#c88600"
+  },
+  "0052": {
+    "label": "NEAR Mainnet (0052)",
+    "image": "Near.png",
+    "mainColor": "#3c3c3c"
+  },
+  "03CB": {
+    "label": "Swimmer Mainnet (03CB)",
+    "image": "Swimmer.png",
+    "mainColor": "#ff229a"
+  },
+  "0053": {
+    "label": "Optimism Mainnet (0053)",
+    "image": "Optimism.png",
+    "mainColor": "#ff0422"
+  },
+  "0054": {
+    "label": "Osmosis Mainnet (0054)",
+    "image": "Osmosis.png",
+    "mainColor": "#b199d3"
+  },
+  "0056": {
+    "label": "Klaytn Mainnet (0056)",
+    "image": "Klaytn.png",
+    "mainColor": "#ff3e00"
+  },
+  "0057": {
+    "label": "Meter Mainnet (0057)",
+    "image": "Meter.png",
+    "mainColor": "#1e3385"
+  },
+  "0058": {
+    "label": "Metis Mainnet (0058)",
+    "image": "Metis.png",
+    "mainColor": "#00d6c8"
+  },
+  "0059": {
+    "label": "Dogechain Mainnet (0059)",
+    "image": "Dogechain.png",
+    "mainColor": "#ffe064"
+  },
+  "0060": {
+    "label": "Starknet Mainnet (0060)",
+    "image": "Starknet.png",
+    "mainColor": "#2d2d70"
+  },
+  "0061": {
+    "label": "Starknet Testnet (0061)",
+    "image": "Starknet.png",
+    "mainColor": "#2d2d70"
+  },
+  "0063":{
+    "label":  "Goerli Archival (0063)",
+    "image": "Ethereum.png",
+    "mainColor": "#343c74"
+  },
+  "0065": {
+    "label":  "Celo Mainnet (0065)",
+    "image": "Celo.png",
+    "mainColor": "#32d180"
+  },
+  "0066": {
+    "label": "Arbitrum One (0066)",
+    "image": "ArbitrumOne.png",
+    "mainColor": "#2d374b"
+  },
+  "0067": {
+  	"label": "Velas Mainnet (0067)",
+  	"image": "Velas.png",
+  	"mainColor": "#0037c1"
+  },
+  "0068": {
+  	"label": "Velas Archival (0068)",
+  	"image": "Velas.png",
+  	"mainColor": "#0037c1"
+  },
+  "0069": {
+    "label": "Oasys Archival (0069)",
+    "image": "Oasys.png",
+    "mainColor": "#2a9e92"
+  },
+  "0070": {
+    "label": "Oasys Mainnet (0070)",
+    "image": "Oasys.png",
+    "mainColor": "#2a9e92"
+  },
+  "0071": {
+    "label": "Kava Mainnet (0071)",
+    "image": "Kava.png",
+    "mainColor": "#ff433e"
+  },
+  "0072": {
+    "label": "Kava Archival (0071)",
+    "image": "Kava.png",
+    "mainColor": "#ff433e"
+  },
+  "0074": {
+    "label": "Polygon zkEVM (0074)",
+    "image": "Polygon.png",
+    "mainColor": "#8247e5"
+  },
+  "0075": {
+    "label": "Scroll Testnet (0075)",
+    "image": "Scroll.png",
+    "mainColor": "#e5d1b8"
+  },
+  "0076": {
+    "label": "Sui Mainnet (0076)",
+    "image": "Sui.png",
+    "mainColor": "#4ba2ff"
+  },
+  "default": {
+    "label": "",
+    "image": "no_chain_image.png",
+    "mainColor": "#939393"
+  }
+}
