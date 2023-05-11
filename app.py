@@ -192,7 +192,7 @@ def do_calculate_runners_perf_7d():
 
 def calculate_runners_perf_7d(force_refresh: bool = False) -> dict:
     global runners_perf_data_7d
-    end_date = datetime.now().date() - timedelta(days=1)
+    end_date = datetime.utcnow().date() - timedelta(days=1)
     start_date = end_date - timedelta(days=7)
 
     if force_refresh is False and runners_perf_data_7d is not None:
