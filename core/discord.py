@@ -33,6 +33,7 @@ class DiscordBot:
         self.webhook.remove_embeds()
         self.webhook.add_embed(embed_net_perf)
         self.webhook.execute()
+        self.webhook.remove_embeds()
 
     def post_runners_perf_data(self, runners_data: List[RunnerPerformance]):
         # chuncks = [runners_data[x:x+9] for x in range(0, len(runners_data), 9)]
