@@ -99,7 +99,7 @@ def get_stats(num_node_runners=25):
     )
 
     # include hard-coded domains
-    hard_coded_domains = ["aapokt.com", "cryptonode.tools"]
+    hard_coded_domains = ["aapokt.com", "cryptonode.tools", "qspider.com"]
     for domain in hard_coded_domains:
         node_runner = next(
             (r for r in big_nodes_runners if r["service_domain"] == domain), None
